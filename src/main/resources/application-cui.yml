@@ -1,0 +1,11 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 1000000000000
+      max-request-size: 1000000000000
+  datasource:
+    driver-class-name: dm.jdbc.driver.DmDriver
+    url: jdbc:dm://127.0.0.1:5236/test
+    username: SYSDBA
+    password: dameng666
+    type: com.zaxxer.hikari.HikariDataSource
