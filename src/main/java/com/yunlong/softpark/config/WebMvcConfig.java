@@ -28,7 +28,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/swagger-ui.html",
                         "/user/register",
                         "/user/login/**",
-                        "/user/updatePassword",
+                        "/user/**",
                         "/file/image",
                         "/message/**",
                         "/rank/showRankingByArea",
@@ -40,8 +40,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/register",
                         "/integral/goods",
                         "/integral/title",
-                        "/integral/goods/info"
-//                       , "user/info"
+                        "/integral/goods/info",
+                        "/oss/policy"
                 );
     }
 

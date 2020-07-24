@@ -1,15 +1,13 @@
 package com.yunlong.softpark.controller;
 
-import com.aliyun.oss.OSS;
+import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.common.utils.BinaryUtil;
 import com.aliyun.oss.model.MatchMode;
 import com.aliyun.oss.model.PolicyConditions;
 import com.yunlong.softpark.core.wrapper.ResultWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -22,25 +20,16 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/oss")
-public class OssController {
+public class  OssController {
 
+    private String endpoint = "oss-cn-beijing.aliyuncs.com";
 
-    @Value("${spring.cloud.alicloud.oss.endpoint}")
-    private String endpoint;
+    private String bucket = "gulimall-cui";
 
-    @Value("${spring.cloud.alicloud.oss.bucket}")
-    private String bucket;
-
-    @Value("${spring.cloud.alicloud.access-key}")
-    private String accessId;
+    private String accessId = "LTAI4G6gy9GpoKc4W7aQqA1y";
 
     @Autowired
-    OSS ossClient;
-
-//    @RequestMapping("/hello")
-//    public String hello(){
-//        return "hello";
-//    }
+    OSSClient ossClient;
 
     @RequestMapping("/policy")
     public ResultWrapper policy() {

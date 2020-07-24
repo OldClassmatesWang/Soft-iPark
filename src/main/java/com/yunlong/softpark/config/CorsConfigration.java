@@ -38,13 +38,13 @@ public class CorsConfigration {
      * hikariDataSource使用后关闭，防止超时
      * @throws SQLException
      */
-    @Bean
-    public void getHikariDataSource() throws SQLException {
-        hikariDataSource.setIdleTimeout(60000);
-        hikariDataSource.setConnectionTimeout(60000);
-        hikariDataSource.setValidationTimeout(3000);
-        hikariDataSource.setLoginTimeout(5);
-        hikariDataSource.setMaxLifetime(60000);
-    }
+//    @Bean
+//    public void getHikariDataSource() throws SQLException {
+//        hikariDataSource.setIdleTimeout(60000);
+//        hikariDataSource.setConnectionTimeout(60000);
+//        hikariDataSource.setValidationTimeout(3000);
+//        hikariDataSource.setLoginTimeout(5);
+//        hikariDataSource.setMaxLifetime(60000);
+//    }
 
 }

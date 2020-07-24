@@ -5,7 +5,19 @@ spring:
       max-request-size: 1000000000000
   datasource:
     driver-class-name: dm.jdbc.driver.DmDriver
-    url: jdbc:dm://10.150.3.46:5236/SoftPark
+#    url: jdbc:dm://10.150.3.46:5236/SoftPark
+    url: jdbc:dm://127.0.0.1:5236/softpark
     username: SYSDBA
     password: dameng666
     type: com.zaxxer.hikari.HikariDataSource
+  redis:
+    host: 39.97.250.88
+    port: 6379
+    password: 123456
+
+mybatis:
+  type-aliases-package: com.yunlong.softpark.entity
+#  mapper-locations: classpath:mapper/*Mapper.xml
+  configuration:
+    map-underscore-to-camel-case: true
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
