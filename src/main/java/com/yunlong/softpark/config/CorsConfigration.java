@@ -18,8 +18,8 @@ import java.sql.SQLException;
 @Configuration
 public class CorsConfigration {
 
-    @Autowired
-    HikariDataSource hikariDataSource;
+//    @Autowired
+//    HikariDataSource hikariDataSource;
 
     @Bean
     public CorsWebFilter corsWebFilter(){

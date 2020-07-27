@@ -28,21 +28,9 @@ public class SoftwareEntity {
      */
     private String softLogo;
     /**
-     * 授权信息
-     */
-    private String license;
-    /**
      * 版本信息
      */
     private String edition;
-    /**
-     * 软件类型
-     */
-    private String softType;
-    /**
-     * 软件官网
-     */
-    private String softWeb;
     /**
      * 软件语言
      */
@@ -79,5 +67,9 @@ public class SoftwareEntity {
      * 下载次数
      */
     private Integer downloads;
+    /**
+     * 安装步骤
+     */
+    private String installProgress;
 
 }

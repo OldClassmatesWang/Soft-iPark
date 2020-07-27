@@ -8,17 +8,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 
- *
- * @author Cui
- * @email ${email}
- * @date 2020-07-21 16:54:16
+ * @Author: Cui
+ * @Date: 2020/7/27
+ * @Description:
  */
-@Api(value = "SortController", tags = {"分类API"})
+@Api(value = "ColumnController", tags = {"栏目API"})
 @RestController
 @Slf4j
-@RequestMapping("/sort")
-public class SortController extends BaseController<UserInfo> {
-
-
+@RequestMapping("/column")
+public class ColumnController extends BaseController<UserInfo> {
 }

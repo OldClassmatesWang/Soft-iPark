@@ -52,7 +52,7 @@ public class UserController extends BaseController<UserInfo> {
     }
 
     /**
-     * 登录
+     * 密码登录
      * @param loginForm
      * @return
      */

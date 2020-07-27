@@ -22,17 +22,9 @@ public class HistorySoft {
      */
     private String softLogo;
     /**
-     * 授权信息
-     */
-    private String license;
-    /**
      * 版本信息
      */
     private String edition;
-    /**
-     * 软件类型
-     */
-    private String softType;
     /**
      * 软件语言
      */

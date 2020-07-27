@@ -209,18 +209,15 @@ public class UserServiceImpl implements UserService {
         List<SoftwareEntity> softs = softwareMapper.selectByAuthor(
                 userId,(page-1)*10);
         //封装
-        System.out.println(softs+"--------------------");
         List<HistorySoft> historySofts = new ArrayList<>();
         for(SoftwareEntity s : softs){
             HistorySoft historySoft = new HistorySoft();
             historySoft.setEdition(s.getEdition());
             historySoft.setLanguage(s.getLanguage());
-            historySoft.setLicense(s.getLicense());
             historySoft.setPlatform(s.getPlatform());
             historySoft.setSoftLogo(s.getSoftLogo());
             historySoft.setSoftName(s.getSoftName());
             historySoft.setSoftSize(s.getSoftSize());
-            historySoft.setSoftType(s.getSoftType());
             historySoft.setUpdateTime(s.getUpdateTime());
             historySoft.setVerify(s.getVerify());
             historySoft.setDownloads(s.getDownloads());
