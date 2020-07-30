@@ -8,6 +8,14 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
   servlet:
     multipart:
-      max-file-size: 100MB
-      max-request-size: 100MB
+      max-file-size: 10GB
+      max-request-size: 10GB
       enabled: true
+
+FTP:
+  ADDRESS: 39.97.250.88
+  PORT: 21
+  USERNAME: ftpuser
+  PASSWORD: ftpuser
+  BASEPATH: /home/ftpuser/www
+  BASEURL: http://39.97.250.88

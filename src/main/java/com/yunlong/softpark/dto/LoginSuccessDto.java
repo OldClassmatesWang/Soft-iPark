@@ -13,12 +13,4 @@ import java.util.Date;
 public class LoginSuccessDto {
 
     private String accessToken;
-
-    private String username;
-
-    private String phone;
-
-    private String email;
-
-    private String createTime;
 }

@@ -42,7 +42,7 @@ public class UserController extends BaseController<UserInfo> {
     // TODO 添加JSR303验证
     public ResultWrapper register(/*@Valid*/ @RequestBody RegisterForm registerForm){
         try {
-//            redisRepository.saveMessageCode("15698614402","123456");
+            redisRepository.saveMessageCode("13191097086","123456");
             MessageSuccessDto messageSuccessDto = userService.register(registerForm);
             return ResultWrapper.successWithData(messageSuccessDto);
         }catch (SysException e){
@@ -68,6 +68,19 @@ public class UserController extends BaseController<UserInfo> {
         }
     }
 
+    @ApiOperation(value = "用户验证码登录")
+    @PostMapping("/loginCode")
+    public ResultWrapper login(@RequestBody LoginCodeForm loginCodeForm){
+        try {
+            LoginSuccessDto loginSuccessDto = userService.login(loginCodeForm);
+            return ResultWrapper.successWithData(loginSuccessDto);
+        }catch (SysException e){
+            log.info("UserController.login");
+            return ResultWrapper.failure(e.getMessage());
+        }
+    }
+
+
     /**
      * 忘记密码
      * @param forgetPasswordForm
@@ -82,6 +95,13 @@ public class UserController extends BaseController<UserInfo> {
             log.info("UserController.forgetPassword");
             return ResultWrapper.failure(e.getMessage());
         }
+    }
+
+
+    @ApiOperation(value = "获取个人中心")
+    @GetMapping("/getUserInfo")
+    public ResultWrapper getUserInfo(){
+        return ResultWrapper.successWithData(userService.getUserInfo(getCurrentUserInfo().getUserId()));
     }
 
     /**
@@ -121,8 +141,6 @@ public class UserController extends BaseController<UserInfo> {
     @PostMapping("/updatePasswordByCode")
     public ResultWrapper updatePasswordByCode(@RequestBody UpdatePassByCodeForm updatePassByCodeForm){
         try {
-            String userId="fa7370b1feee4528ab4a84d7b1c11c4b";
-            redisRepository.saveMessageCode("15698614402","123456");
             return ResultWrapper.successWithData(userService.
                     updatePasswordByCode(updatePassByCodeForm,
                             getCurrentUserInfo().getUserId()));
@@ -140,6 +158,18 @@ public class UserController extends BaseController<UserInfo> {
     @ApiOperation(value = "获取历史发布的软件")
     @GetMapping("/getHistorySoft/{page}")
     public ResultWrapper getHistorySoft(@PathVariable("page") Integer page){
-        return ResultWrapper.successWithData(userService.getHistoryPublished(/*getCurrentUserInfo().getUserId()*/"xxx",page));
+        return ResultWrapper.successWithData(userService.getHistoryPublished(getCurrentUserInfo().getUserId(),page));
     }
+
+    /**
+     * 退出登录
+     * @return
+     */
+    @ApiOperation(value = "退出登录")
+    @GetMapping("/logout")
+    public ResultWrapper logout(){
+        userService.logout(getCurrentUserInfo().getUserId());
+        return ResultWrapper.success();
+    }
+
 }

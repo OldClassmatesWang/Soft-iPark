@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
             Date createTime = new Date();
             //修改时间
             Date updateTime = new Date();
-            userMapper.insertUser(phone,password,userId,username,email, null,createTime,
+            userMapper.insertUser(phone,password,userId,username,email,createTime,
                     updateTime);
             //构造返回值
             MessageSuccessDto messageSuccessDto = new MessageSuccessDto();
@@ -105,10 +105,6 @@ public class UserServiceImpl implements UserService {
             tokenInfo.setUserId(userEntity.getUserId());
             LoginSuccessDto loginSuccessDto = new LoginSuccessDto();
             loginSuccessDto.setAccessToken(tokenInfo.getAccessToken());
-            loginSuccessDto.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(userEntity.getCreateTime()));
-            loginSuccessDto.setEmail(userEntity.getEmail());
-            loginSuccessDto.setPhone(userEntity.getPhone());
-            loginSuccessDto.setUsername(userEntity.getUsername());
             //保存这个用户和token信息
             redisRepository.saveAccessToken(tokenInfo);
             redisRepository.saveLoginAccessToken(tokenInfo);
@@ -229,6 +225,64 @@ public class UserServiceImpl implements UserService {
         return historySoftDto;
     }
 
+    /**
+     * 获取个人中心
+     * @param userId
+     * @return
+     */
+    @Override
+    public UserInfoDto getUserInfo(String userId) {
+        UserEntity userEntity = userMapper.selectById(userId);
+        UserInfoDto userInfoDto = new UserInfoDto();
+        userInfoDto.setUsername(userEntity.getUsername());
+        userInfoDto.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                .format(userEntity.getCreateTime()));
+        userInfoDto.setPhone(userEntity.getPhone());
+        userInfoDto.setEmail(userEntity.getEmail());
+        return userInfoDto;
+    }
+
+    /**
+     * 退出登录
+     * @param userId
+     */
+    @Override
+    public void logout(String userId) {
+        deleteToken(userId);
+    }
+
+    /**
+     * 验证码登录
+     * @param loginCodeForm
+     * @return
+     */
+    @Override
+    public LoginSuccessDto login(LoginCodeForm loginCodeForm) {
+        UserEntity userEntity = userMapper.selectByPhone(loginCodeForm.getPhone());
+        if(null == userEntity){
+            log.info("用户不存在！");
+            throw new SysException("用户不存在！");
+        }else if(!redisRepository.selectMessageCodeByPhone(loginCodeForm.getPhone())
+                .equals(loginCodeForm.getCode())){
+            log.info("验证码错误！");
+            throw new SysException("验证码错误！");
+        }else {
+            //删除旧的token
+            deleteToken(userEntity.getUserId());
+            //得到一个accessToken，生成tokenInfo
+            TokenInfo tokenInfo = new TokenInfo();
+            tokenInfo.setAccessToken(TokenUtil.genToken());
+            tokenInfo.setUserId(userEntity.getUserId());
+            LoginSuccessDto loginSuccessDto = new LoginSuccessDto();
+            loginSuccessDto.setAccessToken(tokenInfo.getAccessToken());
+            //保存这个用户和token信息
+            redisRepository.saveAccessToken(tokenInfo);
+            redisRepository.saveLoginAccessToken(tokenInfo);
+            System.out.println("token信息:"+tokenInfo.getAccessToken());
+            return loginSuccessDto;
+        }
+    }
+
     //修改密码或异地登录删除旧的token
     private void deleteToken(String userId){
         String oldToken = redisRepository.selectLoginAccessToken(userId);
@@ -237,6 +291,4 @@ public class UserServiceImpl implements UserService {
             redisRepository.deleteLoginAccessToken(userId);
         }
     }
-
-
 }

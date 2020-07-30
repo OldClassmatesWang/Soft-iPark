@@ -22,7 +22,7 @@ public class SoftwareEntity {
     /**
      * 父栏目id
      */
-    private Integer parentId;
+    private String parentId;
     /**
      * 软件logo
      */
@@ -51,10 +51,6 @@ public class SoftwareEntity {
      * 上传者id
      */
     private String userId;
-    /**
-     * 软件简介id
-     */
-    private String introduceId;
 
     private Date createTime;
 
@@ -63,13 +59,19 @@ public class SoftwareEntity {
      * 审核 0未审核 1通过 2未通过
      */
     private Integer verify;
+
+    private String showPic;
     /**
      * 下载次数
      */
     private Integer downloads;
     /**
-     * 安装步骤
+     * 安装步骤左右
      */
-    private String installProgress;
+    private String installProleft;
+
+    private String installProright;
+
+    private String briefIntro;
 
 }

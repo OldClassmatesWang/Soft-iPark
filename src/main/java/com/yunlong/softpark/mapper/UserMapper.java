@@ -11,13 +11,12 @@ import java.util.Date;
 public interface UserMapper {
 
     @Insert("insert into \"softpark\".\"USER\"(\"USER_ID\", \"USERNAME\", \"PHONE\", " +
-            "\"EMAIL\", \"PASSWORD\", \"PUBLISHED\",\"CREATE_TIME\",\"UPDATE_TIME\") \n" +
-            "VALUES(#{userId},#{username},#{phone},#{email},#{password},#{published}," +
+            "\"EMAIL\", \"PASSWORD\" , \"CREATE_TIME\",\"UPDATE_TIME\") \n" +
+            "VALUES(#{userId},#{username},#{phone},#{email},#{password}," +
             "#{createTime},#{updateTime});")
-    void insertUser(String phone, String password, String userId, String username, String email,
-                    String published, Date createTime,Date updateTime);
+    void insertUser(String phone, String password, String userId, String username, String email, Date createTime,Date updateTime);
 
-    @Select("select \"USER_ID\",\"USERNAME\",\"PHONE\",\"EMAIL\",\"PASSWORD\",\"PUBLISHED\"," +
+    @Select("select \"USER_ID\",\"USERNAME\",\"PHONE\",\"EMAIL\",\"PASSWORD\"," +
             "\"CREATE_TIME\",\"UPDATE_TIME\" " +
             "from \"softpark\".\"USER\" " +
             "where \"PHONE\"=#{phone};")
@@ -33,7 +32,7 @@ public interface UserMapper {
             "where \"USER_ID\" = #{userId};")
     void updateInfo(String username,String email,Date updateTime,String userId);
 
-    @Select("select \"USER_ID\",\"USERNAME\",\"PHONE\",\"EMAIL\",\"PASSWORD\",\"PUBLISHED\"," +
+    @Select("select \"USER_ID\",\"USERNAME\",\"PHONE\",\"EMAIL\",\"PASSWORD\"," +
             "\"CREATE_TIME\",\"UPDATE_TIME\" " +
             "from \"softpark\".\"USER\" " +
             "where \"USER_ID\"=#{userId}")

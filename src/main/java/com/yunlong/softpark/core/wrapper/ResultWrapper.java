@@ -10,7 +10,7 @@ import java.util.Map;
 @Data
 public class ResultWrapper<T> {
 
-    final static Integer CODE_SUCCESS = 0;
+    final static Integer CODE_SUCCESS = 200;
 
     final static String MESSAGE_SUCCESS = "操作成功";
 

@@ -24,9 +24,23 @@ public class RotationController extends BaseController<UserInfo> {
     @Autowired
     RotationService rotationService;
 
+    /**
+     * 获取轮播图
+     * @return
+     */
     @ApiOperation(value = "获取轮播图")
     @GetMapping("/getRotation")
     public ResultWrapper getRotation(){
         return ResultWrapper.successWithData(rotationService.getRotation());
+    }
+
+    /**
+     * 获取首页软件
+     * @return
+     */
+    @ApiOperation(value = "获取首页软件")
+    @GetMapping("/getFirstMajor")
+    public ResultWrapper getFirstMajor(){
+        return ResultWrapper.success();
     }
 }

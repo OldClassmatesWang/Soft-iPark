@@ -34,10 +34,6 @@ public class UserEntity {
      */
     private String password;
     /**
-     * 历史发表的软件
-     */
-    private String published;
-    /**
      * 创建时间
      */
     private Date createTime;

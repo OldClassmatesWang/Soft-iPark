@@ -3,6 +3,7 @@ package com.yunlong.softpark.service;
 import com.yunlong.softpark.dto.HistorySoftDto;
 import com.yunlong.softpark.dto.LoginSuccessDto;
 import com.yunlong.softpark.dto.MessageSuccessDto;
+import com.yunlong.softpark.dto.UserInfoDto;
 import com.yunlong.softpark.form.*;
 import org.springframework.stereotype.Component;
 
@@ -23,4 +24,10 @@ public interface UserService {
     MessageSuccessDto updatePasswordByCode(UpdatePassByCodeForm updatePassByCodeForm,String userId);
 
     HistorySoftDto getHistoryPublished(String userId,Integer page);
+
+    UserInfoDto getUserInfo(String userId);
+
+    void logout(String userId);
+
+    LoginSuccessDto login(LoginCodeForm loginCodeForm);
 }

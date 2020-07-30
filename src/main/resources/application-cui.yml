@@ -15,6 +15,7 @@ spring:
     port: 6379
     password: 123456
 
+
 mybatis:
   type-aliases-package: com.yunlong.softpark.entity
 #  mapper-locations: classpath:mapper/*Mapper.xml
