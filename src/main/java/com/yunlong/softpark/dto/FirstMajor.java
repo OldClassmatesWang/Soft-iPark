@@ -6,11 +6,13 @@ import java.util.List;
 
 /**
  * @Author: Cui
- * @Date: 2020/7/27
+ * @Date: 2020/7/30
  * @Description:
  */
 @Data
-public class FirstMajorDto {
+public class FirstMajor {
 
-    private List<FirstMajor> firstMajors;
+    private String plateName;
+
+    private List<MajorColumn> sonList;
 }

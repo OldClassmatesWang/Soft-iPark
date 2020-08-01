@@ -6,6 +6,8 @@ package com.yunlong.softpark.util;
  * @Version 1.0
  */
 
+import com.yunlong.softpark.redis.RedisRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +21,10 @@ import java.util.Random;
  */
 @Component
 public class ImageCodeUtil {
+
+    @Autowired
+    RedisRepository redisRepository;
+
     static Random random = new Random();
     int width = 150;
     int height = 75;
@@ -87,7 +93,7 @@ public class ImageCodeUtil {
             }
         }
     }
-    public BufferedImage getCodeImage(HttpServletRequest request, HttpServletResponse response){
+    public BufferedImage getCodeImage(HttpServletRequest request){
         //设置画板（图片）参数（宽度，高度，图片颜色）
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         //获取画笔
@@ -98,7 +104,10 @@ public class ImageCodeUtil {
         //获取随机四个字符
         String code = randCode();
         //将生成的字符保存在session中
-        request.getSession().setAttribute("ImageCode", code);
+//        request.getSession().setAttribute("ImageCode", code);
+        //将生成的图形验证码保存到redis仓库
+        redisRepository.saveImageCode(request.getSession().getId(),code);
+
         //设置绘制区域
         pen.fillRect(0, 0, width, height);
         //设置字体(字体，加粗，大小）

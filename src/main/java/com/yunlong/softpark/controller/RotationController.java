@@ -28,7 +28,6 @@ public class RotationController extends BaseController<UserInfo> {
      * 获取轮播图
      * @return
      */
-    @ApiOperation(value = "获取轮播图")
     @GetMapping("/getRotation")
     public ResultWrapper getRotation(){
         return ResultWrapper.successWithData(rotationService.getRotation());
@@ -38,7 +37,6 @@ public class RotationController extends BaseController<UserInfo> {
      * 获取首页软件
      * @return
      */
-    @ApiOperation(value = "获取首页软件")
     @GetMapping("/getFirstMajor")
     public ResultWrapper getFirstMajor(){
         return ResultWrapper.success();

@@ -1,5 +1,7 @@
 package com.yunlong.softpark.controller;
 
+import com.yunlong.softpark.core.exception.SysException;
+import com.yunlong.softpark.core.wrapper.ResultWrapper;
 import com.yunlong.softpark.dto.MessageSuccessDto;
 import com.yunlong.softpark.form.ImageCodeForm;
 import com.yunlong.softpark.form.PhoneCodeForm;
@@ -32,7 +34,7 @@ import java.io.IOException;
  * 1）图形验证码
  * 2）手机号验证码
  */
-@Api(value = "ColumnController", tags = {"栏目API"})
+@Api(value = "CodeController", tags = {"验证码API"})
 @Controller
 @Slf4j
 @RequestMapping("/code")
@@ -48,10 +50,14 @@ public class CodeController {
      * @throws IOException
      */
     @RequestMapping(path = "/image", produces = MediaType.IMAGE_PNG_VALUE,method = RequestMethod.GET)
-    public void getImageCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        BufferedImage image = codeService.getImageCode(request, response);
-        ServletOutputStream out = response.getOutputStream();
-        ImageIO.write(image,"png",out);
+    public void getImageCode(HttpServletRequest request, HttpServletResponse response){
+        try {
+            BufferedImage image = codeService.getImageCode(request);
+            ServletOutputStream out = response.getOutputStream();
+            ImageIO.write(image,"png",out);
+        }catch (IOException e){
+
+        }
     }
 
     /**
@@ -73,14 +79,18 @@ public class CodeController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(path = "/phone",method = RequestMethod.GET)
-    public MessageSuccessDto getPhoneCode(@RequestBody PhoneCodeForm phoneCodeForm,HttpServletRequest request){
-        MessageSuccessDto messageSuccessDto =codeService.getPhoneCode(phoneCodeForm.getPhoneNumber(),request);
-        return messageSuccessDto;
+    @RequestMapping(path = "/phone",method = RequestMethod.POST)
+    public ResultWrapper getPhoneCode(@RequestBody PhoneCodeForm phoneCodeForm,HttpServletRequest request){
+        try {
+            MessageSuccessDto messageSuccessDto =codeService.getPhoneCode(phoneCodeForm,request);
+            return ResultWrapper.successWithData(messageSuccessDto);
+        }catch (SysException e){
+            return ResultWrapper.failure(e.getMessage());
+        }
     }
 
     @RequestMapping(path = "/judgePhone",method = RequestMethod.POST)
-    public MessageSuccessDto juedgePhoneCode(@RequestBody PhoneCodeForm phoneCodeForm,HttpServletRequest request){
+    public MessageSuccessDto judgePhoneCode(@RequestBody PhoneCodeForm phoneCodeForm,HttpServletRequest request){
         MessageSuccessDto messageSuccessDto = codeService.judgePhoneCode(phoneCodeForm.getCode(),request);
         return messageSuccessDto;
     }

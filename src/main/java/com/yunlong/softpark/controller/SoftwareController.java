@@ -25,13 +25,11 @@ public class SoftwareController extends BaseController<UserInfo> {
     @Autowired
     SoftwareService softwareService;
 
-//    @RequestMapping("/pic/upload")
-
     /**
      * 分类软件主体
      * @return
      */
-    @GetMapping("/sort/{page}/{plateId}")
+    @GetMapping("/sort/{plateId}/{page}")
     public ResultWrapper getMajorSoft(@PathVariable("page") Integer page,@PathVariable("plateId")Integer plateId){
         return ResultWrapper.successWithData(softwareService.getMajorSoft(page,plateId));
     }
@@ -52,9 +50,6 @@ public class SoftwareController extends BaseController<UserInfo> {
      */
     @PostMapping("/publish")
     public ResultWrapper publishSoft(@RequestBody PublishedForm publishedForm){
-        TokenInfo tokenInfo = new TokenInfo();
-        tokenInfo.setAccessToken("123456");
-        tokenInfo.setUserId("");
         return ResultWrapper.successWithData(softwareService.publishedSoft(publishedForm,getCurrentUserInfo().getUserId()));
     }
 
@@ -64,8 +59,8 @@ public class SoftwareController extends BaseController<UserInfo> {
      * @param key
      * @return
      */
-    @GetMapping("/search/{key}")
-    public ResultWrapper search(@PathVariable("key") String key){
+    @GetMapping("/search")
+    public ResultWrapper search(@RequestParam("key") String key){
         return ResultWrapper.successWithData(softwareService.search(key));
     }
 
@@ -92,7 +87,7 @@ public class SoftwareController extends BaseController<UserInfo> {
     }
 
     /**
-     *
+     * 下载
      * @param softId
      * @return
      */
@@ -101,4 +96,14 @@ public class SoftwareController extends BaseController<UserInfo> {
         softwareService.download(softId);
         return ResultWrapper.success();
     }
+
+    /**
+     * 发布软件的获取的三级菜单
+     * @return
+     */
+    @GetMapping("/menu")
+    public ResultWrapper publishMenu(){
+        return ResultWrapper.successWithData(softwareService.publishMenu());
+    }
+
 }

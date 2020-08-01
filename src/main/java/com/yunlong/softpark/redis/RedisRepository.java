@@ -15,6 +15,13 @@ public interface RedisRepository {
     void saveMessageCode(String phone, String messageCode);
 
     /**
+     * 保存sessionId 图形验证码
+     * @param sessionId
+     * @param code
+     */
+    void saveImageCode(String sessionId,String code);
+
+    /**
      * 根据key：手机号 查询验证码
      * @param phone
      * @return
@@ -22,10 +29,26 @@ public interface RedisRepository {
     String selectMessageCodeByPhone(String phone);
 
     /**
+     * 根据session搜索图形验证码
+     * @param sessionId
+     * @return
+     */
+    String selectCodeBySession(String sessionId);
+
+    /**
+     * 删除session和code的键值对
+     * @param sessionId
+     * @return
+     */
+    void deleteSessionCode(String sessionId);
+
+    /**
      * 删除手机号和验证码的键值对
      * @param phone
      */
     void deleteMessageCode(String phone);
+
+
 
     /**
      * 认证

@@ -13,4 +13,6 @@ public class UploadDto {
     private String fileUrl;
 
     private String message;
+
+    private String size;
 }

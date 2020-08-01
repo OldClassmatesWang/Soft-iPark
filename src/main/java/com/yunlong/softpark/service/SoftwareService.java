@@ -9,7 +9,7 @@ public interface SoftwareService {
 
     FirstMajorDto getFirstMajor();
 
-    SoftMajorDto getMajorSoft(Integer page,Integer plateId);
+    ColumnSortDto getMajorSoft(Integer page,Integer plateId);
 
     MessageSuccessDto publishedSoft(PublishedForm publishedForm,String userId);
 
@@ -20,4 +20,6 @@ public interface SoftwareService {
     SearchColumnDto getColumnBySort(Integer sortId,Integer page);
 
     void download(String softId);
+
+    PublishMenuDto publishMenu();
 }

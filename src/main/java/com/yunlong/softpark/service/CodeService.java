@@ -1,6 +1,7 @@
 package com.yunlong.softpark.service;
 
 import com.yunlong.softpark.dto.MessageSuccessDto;
+import com.yunlong.softpark.form.PhoneCodeForm;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +20,7 @@ public interface CodeService {
      * 返回给前端一张图形验证码
      * @return
      */
-    BufferedImage getImageCode(HttpServletRequest request, HttpServletResponse response);
+    BufferedImage getImageCode(HttpServletRequest request);
 
     /**
      * 同一session判断图形验证码匹配正确
@@ -32,7 +33,7 @@ public interface CodeService {
      * 获取手机号验证码
      * @return
      */
-    MessageSuccessDto getPhoneCode(String phoneNumber, HttpServletRequest request);
+    MessageSuccessDto getPhoneCode(PhoneCodeForm phoneCodeForm, HttpServletRequest request);
 
     /**
      * 判断前端传递的手机号是否匹配

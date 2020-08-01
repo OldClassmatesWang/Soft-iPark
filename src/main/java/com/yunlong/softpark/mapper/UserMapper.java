@@ -38,4 +38,6 @@ public interface UserMapper {
             "where \"USER_ID\"=#{userId}")
     UserEntity selectById(String userId);
 
+    @Update("update \"softpark\".\"USER\" set  \"PHONE\" = #{newPhone} where \"USER_ID\"=#{userId}")
+    void updatePhone(String userId, String newPhone);
 }

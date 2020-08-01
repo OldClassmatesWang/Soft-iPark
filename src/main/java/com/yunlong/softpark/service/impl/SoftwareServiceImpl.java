@@ -9,6 +9,7 @@ import com.yunlong.softpark.form.PublishedForm;
 import com.yunlong.softpark.mapper.ColumnMapper;
 import com.yunlong.softpark.mapper.SoftwareMapper;
 import com.yunlong.softpark.service.SoftwareService;
+import com.zaxxer.hikari.util.FastList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @Author: Cui
@@ -34,28 +37,55 @@ public class SoftwareServiceImpl implements SoftwareService {
     @Autowired
     ColumnMapper columnMapper;
 
+    /**
+     * 获取首页软件
+     * @return
+     */
     public FirstMajorDto getFirstMajor(){
-        List<PlatesEntity> plates = softwareMapper.getPlates(4);
-        List<PlatesEntity> plateList = new ArrayList<>();
-        for(PlatesEntity p : plates){
-            PlatesEntity m = new PlatesEntity();
-            m.setPlateId(p.getPlateId());
-            m.setPlateName(p.getPlateName());
-            plateList.add(m);
-        }
-        List<MajorColumn> columnList = new ArrayList<>();
+        //添加综合推荐到列表
+        FirstMajor firstMajor = new FirstMajor();
+        firstMajor.setPlateName("综合推荐");
+        List<MajorColumn> majorColumns = new ArrayList<>();
         List<ColumnEntity> columnEntities = softwareMapper.getRecommend();
         for(ColumnEntity c : columnEntities){
-            MajorColumn m = new MajorColumn();
-            m.setColumnId(c.getColumnId());
-            m.setDownloads(c.getDownloads());
-            m.setColumnName(c.getColumnName());
-            m.setColumnLogo(c.getColumnLogo());
-            columnList.add(m);
+            MajorColumn majorColumn = new MajorColumn();
+            majorColumn.setColumnLogo(c.getColumnLogo());
+            majorColumn.setColumnName(c.getColumnName());
+            majorColumn.setDownloads(c.getDownloads());
+            majorColumn.setColumnId(c.getColumnId());
+            majorColumns.add(majorColumn);
         }
+        firstMajor.setSonList(majorColumns);
         FirstMajorDto firstMajorDto = new FirstMajorDto();
-        firstMajorDto.setColumnList(columnList);
-        firstMajorDto.setPlateList(plateList);
+        List<FirstMajor> firstMajors = new ArrayList<>();
+        List<PlatesEntity> plates = softwareMapper.getPlates(4);
+        List<SortEntity> sortEntities = softwareMapper.getSort();
+        List<ColumnEntity> columnBySort = softwareMapper.getColumn();
+        //匹配三级菜单到一级菜单
+        firstMajors = plates.stream().map((p)->{
+            FirstMajor fm = new FirstMajor();
+            fm.setPlateName(p.getPlateName());
+            List<MajorColumn> l = new ArrayList<>();
+            sortEntities.stream().filter((s) ->
+                    s.getParentId() == p.getPlateId()
+            ).forEach((c)->{
+                columnBySort.stream().filter((columnEntity)->
+                    columnEntity.getParentId() == c.getSortId()
+                ).map((x)->{
+                    MajorColumn majorColumn = new MajorColumn();
+                    majorColumn.setColumnLogo(x.getColumnLogo());
+                    majorColumn.setColumnName(x.getColumnName());
+                    majorColumn.setDownloads(x.getDownloads());
+                    majorColumn.setColumnId(x.getColumnId());
+                    l.add(majorColumn);
+                    return majorColumn;
+                }).collect(Collectors.toList());
+            });
+            fm.setSonList(l);
+            return fm;
+        }).collect(Collectors.toList());
+        firstMajors.add(0,firstMajor);
+        firstMajorDto.setFirstMajors(firstMajors);
         return firstMajorDto;
     }
 
@@ -64,8 +94,38 @@ public class SoftwareServiceImpl implements SoftwareService {
      * @return
      */
     @Override
-    public SoftMajorDto getMajorSoft(Integer page,Integer plateId) {
-        //从表中查询所有的板块
+    public ColumnSortDto getMajorSoft(Integer page,Integer plateId) {
+        //从数据库中查取板块，分类，栏目
+//        List<PlatesEntity> platesEntities = softwareMapper.getPlates(100);
+//        List<SortEntity> sortEntities = softwareMapper.getSort();
+//        List<ColumnEntity> columnEntities = softwareMapper.getColumn();
+//
+//        //封装三级菜单
+//        List<MajorPlate> majorPlates = platesEntities.stream().map((p)->{
+//            MajorPlate majorPlate = new MajorPlate();
+//            majorPlate.setPlateName(p.getPlateName());
+//            List<MajorSort> majorSorts = sortEntities.stream().map((s)->{
+//                MajorSort majorSort = new MajorSort();
+//                majorSort.setSortName(s.getSortName());
+//                majorSort.setSortId(s.getSortId());
+//                List<MajorColumn> majorColumns = columnEntities.stream().map((c)->{
+//                    MajorColumn majorColumn = new MajorColumn();
+//                    majorColumn.setColumnId(c.getColumnId());
+//                    majorColumn.setDownloads(c.getDownloads());
+//                    majorColumn.setColumnName(c.getColumnName());
+//                    majorColumn.setColumnLogo(c.getColumnLogo());
+//                    return majorColumn;
+//                }).collect(Collectors.toList());
+//                majorSort.setMajorColumns(majorColumns);
+//                return majorSort;
+//            }).collect(Collectors.toList());
+//            majorPlate.setMajorSorts(majorSorts);
+//            return majorPlate;
+//        }).collect(Collectors.toList());
+//        SoftMajorDto softMajorDto = new SoftMajorDto();
+//        softMajorDto.setPlatesEntities(majorPlates);
+//        return softMajorDto;
+
         List<PlatesEntity> platesEntities = softwareMapper.getPlates(100);
 //        Integer platesMinId = getPlatesMin(platesEntities);
         //根据板块id查询子分类
@@ -73,12 +133,12 @@ public class SoftwareServiceImpl implements SoftwareService {
         Integer sortMinId = getSortMin(sortEntities.getSearchSortByPlates());
         //根据分类id查询子栏目
         List<MajorColumn> columnEntities = getColumnBySort(sortMinId,page).getSearchColumns();
-        SoftMajorDto softMajorDto = new SoftMajorDto();
+        ColumnSortDto columnSortDto = new ColumnSortDto();
         //构造返回值
-        softMajorDto.setColumnEntities(columnEntities);
-        softMajorDto.setPlatesEntities(platesEntities);
-        softMajorDto.setSortEntities(sortEntities.getSearchSortByPlates());
-        return softMajorDto;
+        columnSortDto.setColumnEntities(columnEntities);
+        columnSortDto.setPlatesEntities(platesEntities);
+        columnSortDto.setSortEntities(sortEntities.getSearchSortByPlates());
+        return columnSortDto;
     }
 
 
@@ -103,6 +163,10 @@ public class SoftwareServiceImpl implements SoftwareService {
         return searchColumnDto;
     }
 
+    /**
+     * 更新下载次数
+     * @param softId
+     */
     @Override
     public void download(String softId) {
         SoftwareEntity softwareEntity = softwareMapper.selectBySoftId(softId);
@@ -113,6 +177,44 @@ public class SoftwareServiceImpl implements SoftwareService {
         int columnEntityDownloads = columnEntity.getDownloads();
         columnEntityDownloads++;
         columnMapper.UpdateDownloads(columnEntity.getColumnId(),columnEntityDownloads);
+    }
+
+    /**
+     * 发布页面的三级菜单
+     * @return
+     */
+    @Override
+    public PublishMenuDto publishMenu() {
+        //从数据库中查询板块，分类和栏目
+        List<PlatesEntity> plates = softwareMapper.getPlates(100);
+        List<SortEntity> sort = softwareMapper.getSort();
+        List<ColumnEntity> column = softwareMapper.getColumn();
+        //封装三级菜单
+        List<PlateMenu> plateMenus = plates.stream().map((menu)->{
+            PlateMenu p = new PlateMenu();
+            p.setPlateName(menu.getPlateName());
+            List<SortMenu> sortMenus = sort.stream().filter((s)->
+                s.getParentId() == menu.getPlateId()
+            ).map((s)->{
+                SortMenu sortMenu = new SortMenu();
+                sortMenu.setSortName(s.getSortName());
+                List<ColumnMenu> columnMenus = column.stream().filter((c)->
+                    c.getParentId() == s.getSortId()
+                ).map((c)->{
+                    ColumnMenu columnMenu = new ColumnMenu();
+                    columnMenu.setColumnId(c.getColumnId());
+                    columnMenu.setColumnName(c.getColumnName());
+                    return columnMenu;
+                }).collect(Collectors.toList());
+                sortMenu.setColumnMenus(columnMenus);
+                return sortMenu;
+            }).collect(Collectors.toList());
+            p.setSonList(sortMenus);
+            return p;
+        }).collect(Collectors.toList());
+        PublishMenuDto p = new PublishMenuDto();
+        p.setPlatesMenu(plateMenus);
+        return p;
     }
 
 
@@ -184,6 +286,11 @@ public class SoftwareServiceImpl implements SoftwareService {
         return searchDto;
     }
 
+    /**
+     * 通过板块id获取分类
+     * @param plateId
+     * @return
+     */
     @Override
     public SearchSortByPlateDto getSort(Integer plateId) {
 
@@ -199,7 +306,6 @@ public class SoftwareServiceImpl implements SoftwareService {
         searchSortByPlateDto.setSearchSortByPlates(majorSorts);
         return searchSortByPlateDto;
     }
-
 
     /**
      * 获取板块中最小的id
@@ -226,4 +332,5 @@ public class SoftwareServiceImpl implements SoftwareService {
         }
         return min;
     }
+
 }

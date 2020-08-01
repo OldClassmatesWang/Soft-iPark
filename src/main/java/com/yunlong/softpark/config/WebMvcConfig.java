@@ -29,16 +29,24 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/user/register",
                         "/user/login/**",
                         "/user/login",
-//                        "/user/**",
+                        "/user/loginCode",
                         "/file/image",
                         "/message/**",
                         "/login/**",
-                        "/register",
+                        "/user/register",
                         "/oss/policy",
                         "/upload/**",
                         "/code/**",
                         "/rotation/**",
-                        "/software/major"
+                        "/software/major",
+                        "/software/sort/**",
+                        "/column/simpleIntro",
+                        "/column/rank",
+                        "/column/detailIntro",
+                        "/software/search/**",
+                        "/user/forgetPassword",
+                        "/software/**",
+                        "/upload/**"
                 );
     }
 
@@ -57,6 +65,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 allowedOrigins("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
-                .allowCredentials(false).maxAge(3600);
+                .allowCredentials(true)
+                .maxAge(3600);
     }
 }

@@ -1,6 +1,9 @@
 package com.yunlong.softpark.service.impl;
 
+import com.yunlong.softpark.core.exception.SysException;
 import com.yunlong.softpark.dto.MessageSuccessDto;
+import com.yunlong.softpark.form.PhoneCodeForm;
+import com.yunlong.softpark.redis.RedisRepository;
 import com.yunlong.softpark.service.CodeService;
 import com.yunlong.softpark.util.ImageCodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,15 +30,18 @@ public class CodeServiceImpl implements CodeService {
     @Autowired
     ImageCodeUtil codeUtil;
 
+    @Autowired
+    RedisRepository redisRepository;
+
     /**
      * 返回给前端一张图形验证码
      *
      * @return
      */
     @Override
-    public BufferedImage getImageCode(HttpServletRequest request, HttpServletResponse response) {
+    public BufferedImage getImageCode(HttpServletRequest request) {
 
-        BufferedImage image =  codeUtil.getCodeImage(request,response);
+        BufferedImage image =  codeUtil.getCodeImage(request);
         return image;
     }
 
@@ -48,7 +54,6 @@ public class CodeServiceImpl implements CodeService {
     @Override
     public MessageSuccessDto judgeImageCode(String imageCode, HttpServletRequest request) {
         String sessionAttribute = (String) request.getSession().getAttribute("code");
-        System.out.println("SessionAttribute:"+sessionAttribute);
         MessageSuccessDto messageSuccessDto = new MessageSuccessDto();
         if(sessionAttribute.equals(imageCode)){
             messageSuccessDto.setMessage("success");
@@ -65,7 +70,16 @@ public class CodeServiceImpl implements CodeService {
      * @return
      */
     @Override
-    public MessageSuccessDto getPhoneCode(String phoneNumber,HttpServletRequest request) {
+    public MessageSuccessDto getPhoneCode(PhoneCodeForm phoneCodeForm, HttpServletRequest request) {
+        try {
+            if(!redisRepository.selectCodeBySession(request.getSession().getId()).equals(phoneCodeForm.getCode())){
+                throw new SysException("验证码不正确！");
+            }
+        }catch (NullPointerException e){
+            throw new SysException("验证码为空！");
+        }
+
+        redisRepository.deleteSessionCode(request.getSession().getId());
 
         String postUrl = "http://106.ihuyi.cn/webservice/sms.php?method=Submit";
 
@@ -73,7 +87,7 @@ public class CodeServiceImpl implements CodeService {
 
         request.getSession().setAttribute("valiCode", mobile_code);
 
-        String mobile = phoneNumber;
+        String mobile = phoneCodeForm.getPhone();
         String account = "C39319016"; //查看用户名是登录用户中心->验证码短信->产品总览->APIID
         String password = "cd8500cc549fd016ae72a7e6377fafa4";  //查看密码请登录用户中心->验证码短信->产品总览->APIKEY
         String content = new String("您的验证码是：" + mobile_code + "。请不要把验证码泄露给其他人。");//发送给手机的信息
@@ -84,9 +98,6 @@ public class CodeServiceImpl implements CodeService {
             URL url = new URL(postUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);//允许连接提交信息
-            connection.setRequestMethod("POST");//网页提交方式“GET”、“POST”
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.setRequestProperty("Connection", "Keep-Alive");
             StringBuffer sb = new StringBuffer();
             sb.append("account=" + account);
             sb.append("&password=" + password);
@@ -95,6 +106,7 @@ public class CodeServiceImpl implements CodeService {
             OutputStream os = connection.getOutputStream();
             os.write(sb.toString().getBytes());
             os.close();
+            redisRepository.saveMessageCode(phoneCodeForm.getPhone(),mobile_code+"");
 
             String line, result = "";
             BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "utf-8"));
@@ -131,8 +143,6 @@ public class CodeServiceImpl implements CodeService {
              * 缺少用户是否存在的逻辑判断
              * 以及向表中添加用户的逻辑
              */
-
-
 
             MessageSuccessDto messageSuccessDto = new MessageSuccessDto();
             messageSuccessDto.setMessage("验证码正确，注册成功！");

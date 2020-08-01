@@ -25,8 +25,23 @@ public class RedisRepositoryImpl implements RedisRepository {
     }
 
     @Override
+    public void saveImageCode(String sessionId, String code) {
+        RedisUtil.set(redisTemplate, buildKey(T_VERIFICATION_CODE, sessionId), code);
+    }
+
+    @Override
     public String selectMessageCodeByPhone(String phone) {
         return RedisUtil.<String>get(redisTemplate, buildKey(T_VERIFICATION_CODE, phone), String.class);
+    }
+
+    @Override
+    public String selectCodeBySession(String sessionId) {
+        return RedisUtil.<String>get(redisTemplate, buildKey(T_VERIFICATION_CODE, sessionId), String.class);
+    }
+
+    @Override
+    public void deleteSessionCode(String sessionId) {
+        RedisUtil.del(redisTemplate, buildKey(T_VERIFICATION_CODE, sessionId));
     }
 
     @Override

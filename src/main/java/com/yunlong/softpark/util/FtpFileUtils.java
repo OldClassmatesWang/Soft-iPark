@@ -1,6 +1,7 @@
 package com.yunlong.softpark.util;
 
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * @Author: Cui
@@ -22,5 +23,16 @@ public class FtpFileUtils {
         String str = millis + String.format("%03d", end3);
 
         return str;
+    }
+
+    public static void main(String[] args) {
+        for(int i=0;i<20;i++){
+            System.out.println(i+":"+UUID.randomUUID().toString().replace("-", ""));
+            //1.数据库添加数据
+            //6.移植龙芯电脑
+            //7.根据数据库生成后台管理系统的代码
+            //9.添加JSR303验证
+            //10.添加token过期和验证码过期时间
+        }
     }
 }

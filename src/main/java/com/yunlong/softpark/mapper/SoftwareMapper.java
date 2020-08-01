@@ -6,6 +6,7 @@ import com.yunlong.softpark.entity.SoftwareEntity;
 import com.yunlong.softpark.entity.SortEntity;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -20,8 +21,8 @@ public interface SoftwareMapper {
      * @param min
      * @return
      */
-    @Select("select \"SOFT_ID\",\"SOFT_NAME\",\"PARENT_ID\",\"SOFT_LOGO\",\"LICENSE\",\"EDITION\",\"SOFT_TYPE\"," +
-            "\"SOFT_WEB\",\"LANGUAGE\",\"PLATFORM\",\"SOFT_SIZE\",\"SOFT_ADDR\",\"USER_ID\",\"INTRODUCE_ID\"," +
+    @Select("select \"SOFT_ID\",\"SOFT_NAME\",\"PARENT_ID\",\"SOFT_LOGO\",\"EDITION\"," +
+            "\"LANGUAGE\",\"PLATFORM\",\"SOFT_SIZE\",\"SOFT_ADDR\",\"USER_ID\"," +
             "\"CREATE_TIME\",\"UPDATE_TIME\",\"VERIFY\",\"DOWNLOADS\"\n" +
             "from \"softpark\".\"SOFTWARE\" " +
             "where \"USER_ID\" = #{userId} order by \"CREATE_TIME\" desc limit #{min},10")
@@ -35,8 +36,9 @@ public interface SoftwareMapper {
             "from \"softpark\".\"SORT\" where PARENT_ID = #{platesId}")
     List<SortEntity> getSortEntity(Integer platesId);
 
-    @Select("select \"COLUMN_ID\",\"COLUMN_NAME\",\"PARENT_ID\",\"COLUMN_LOGO\",\"COLUMN_WEB\",\"WEB_INTRODUCE\",\"COLUMN_TYPE\",\"LICENSE\",\"INTRODUCE_ID\",\"DOWNLOADS\",\"SHOW_PIC\",\"RECOMMEND\"\n" +
-            "from \"softpark\".\"COLUMN\" where SORT_ID = #{sortId} limit page,25 ")
+    @Select("select \"COLUMN_ID\",\"COLUMN_NAME\",\"PARENT_ID\",\"COLUMN_LOGO\",\"COLUMN_WEB\",\"WEB_INTRODUCE\",\"COLUMN_TYPE\",\"LICENSE\",\"INTRODUCE_ID\",\"DOWNLOADS\",\"SHOW_PIC\",\"RECOMMEND\",\"VERIFY\"\n" +
+            "from \"softpark\".\"COLUMN\"" +
+            "where PARENT_ID = #{sortId} limit #{page},25 ")
     List<ColumnEntity> getColumnEntity(Integer sortId,Integer page);
 
     @Select("select \"COLUMN_ID\",\"COLUMN_NAME\",\"PARENT_ID\",\"COLUMN_LOGO\",\"COLUMN_WEB\",\"WEB_INTRODUCE\"," +
@@ -58,12 +60,18 @@ public interface SoftwareMapper {
 
     @Select("select *\n" +
             "from \"softpark\".\"SOFTWARE\" \n" +
-            "where SOFT_NAME like '%${key}%' or EDITION like '%${key}%' or LANGUAGE like '%${key}%' " +
-            "or PLATFORM like '%${key}%' or BRIEF_INTRO like '%${key}%';")
+            "where \"SOFT_NAME\" like '%'||#{key}||'%' or \"EDITION\" like '%'||#{key}||'%' or \"LANGUAGE\" like '%'||#{key}||'%' " +
+            "or \"PLATFORM\" like '%'||#{key}||'%' " +
+            "or \"BRIEF_INTRO\" like '%'||#{key}||'%';")
     List<SoftwareEntity> selectByKey(String key);
 
+    @Select("select * from \"softpark\".\"SORT\" where \"PARENT_ID\"=#{plateId}")
     List<SortEntity> selectSortByPlate(Integer plateId);
 
+    /**
+     * 通过sortId获取column
+     */
+    @Select("select * from \"softpark\".\"COLUMN\" where \"PARENT_ID\"=#{sortId}")
     List<ColumnEntity> getColumnBySort(Integer sortId);
 
     /**
@@ -71,6 +79,7 @@ public interface SoftwareMapper {
      * @param softId
      * @return
      */
+    @Select("select * from \"softpark\".\"SOFTWARE\" where \"SOFT_ID\"=#{softId}")
     SoftwareEntity selectBySoftId(String softId);
 
     /**
@@ -78,5 +87,21 @@ public interface SoftwareMapper {
      * @param softId
      * @param downloads
      */
+    @Update("update \"softpark\".\"SOFTWARE\" set \"DOWNLOADS\"= #{downloads} where \"SOFT_ID\" = #{softId}")
     void UpdateDownloads(String softId, int downloads);
+
+    /**
+     * 获取所有的分类
+     * @return
+     */
+    @Select("select * from \"softpark\".\"SORT\" ")
+    List<SortEntity> getSort();
+
+    /**
+     * 获取所有的column
+     * @return
+     */
+    @Select("select * from \"softpark\".\"COLUMN\" where \"VERIFY\"=1")
+    List<ColumnEntity> getColumn();
+
 }

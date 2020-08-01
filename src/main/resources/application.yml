@@ -19,3 +19,7 @@ FTP:
   PASSWORD: ftpuser
   BASEPATH: /home/ftpuser/www
   BASEURL: http://39.97.250.88
+
+#mybatis:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

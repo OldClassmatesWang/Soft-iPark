@@ -6,15 +6,13 @@ import java.util.List;
 
 /**
  * @Author: Cui
- * @Date: 2020/7/27
+ * @Date: 2020/7/31
  * @Description:
  */
 @Data
-public class MajorSort {
-
-    private Integer sortId;
+public class SortMenu {
 
     private String sortName;
 
-//    private List<MajorColumn> majorColumns;
+    private List<ColumnMenu> columnMenus;
 }

@@ -30,4 +30,6 @@ public interface UserService {
     void logout(String userId);
 
     LoginSuccessDto login(LoginCodeForm loginCodeForm);
+
+    void updatePhone(UpdatePhoneForm updatePhoneForm, String userId);
 }

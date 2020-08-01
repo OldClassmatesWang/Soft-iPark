@@ -68,6 +68,11 @@ public class UserController extends BaseController<UserInfo> {
         }
     }
 
+    /**
+     * 验证码登录
+     * @param loginCodeForm
+     * @return
+     */
     @ApiOperation(value = "用户验证码登录")
     @PostMapping("/loginCode")
     public ResultWrapper login(@RequestBody LoginCodeForm loginCodeForm){
@@ -80,6 +85,21 @@ public class UserController extends BaseController<UserInfo> {
         }
     }
 
+    /**
+     * 更新手机号
+     * @param updatePhoneForm
+     * @return
+     */
+    @PostMapping("/updatePhone")
+    public ResultWrapper updatePhone(@RequestBody UpdatePhoneForm updatePhoneForm){
+        try{
+            userService.updatePhone(updatePhoneForm,getCurrentUserInfo().getUserId());
+            return ResultWrapper.success();
+        }catch (SysException e){
+            return ResultWrapper.failure();
+        }
+
+    }
 
     /**
      * 忘记密码
@@ -98,6 +118,10 @@ public class UserController extends BaseController<UserInfo> {
     }
 
 
+    /**
+     * 获取个人中心
+     * @return
+     */
     @ApiOperation(value = "获取个人中心")
     @GetMapping("/getUserInfo")
     public ResultWrapper getUserInfo(){
@@ -156,8 +180,8 @@ public class UserController extends BaseController<UserInfo> {
      * @return
      */
     @ApiOperation(value = "获取历史发布的软件")
-    @GetMapping("/getHistorySoft/{page}")
-    public ResultWrapper getHistorySoft(@PathVariable("page") Integer page){
+    @GetMapping("/getHistorySoft")
+    public ResultWrapper getHistorySoft(@RequestParam("page") Integer page){
         return ResultWrapper.successWithData(userService.getHistoryPublished(getCurrentUserInfo().getUserId(),page));
     }
 

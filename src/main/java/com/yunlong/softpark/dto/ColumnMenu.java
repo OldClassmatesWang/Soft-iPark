@@ -4,15 +4,11 @@ import lombok.Data;
 
 /**
  * @Author: Cui
- * @Date: 2020/7/27
+ * @Date: 2020/7/31
  * @Description:
  */
 @Data
-public class MajorColumn {
-
-    private String columnLogo;
-
-    private Integer downloads;
+public class ColumnMenu {
 
     private String columnName;
 

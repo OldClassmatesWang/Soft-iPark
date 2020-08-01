@@ -12,7 +12,7 @@ public class PhoneCodeForm {
     /**
      * 手机号
      */
-    private String phoneNumber;
+    private String phone;
 
     /**
      * 验证码

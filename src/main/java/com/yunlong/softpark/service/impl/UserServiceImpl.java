@@ -209,15 +209,16 @@ public class UserServiceImpl implements UserService {
         for(SoftwareEntity s : softs){
             HistorySoft historySoft = new HistorySoft();
             historySoft.setEdition(s.getEdition());
-            historySoft.setLanguage(s.getLanguage());
             historySoft.setPlatform(s.getPlatform());
             historySoft.setSoftLogo(s.getSoftLogo());
             historySoft.setSoftName(s.getSoftName());
             historySoft.setSoftSize(s.getSoftSize());
-            historySoft.setUpdateTime(s.getUpdateTime());
+            historySoft.setUpdateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                    .format(s.getUpdateTime()));
             historySoft.setVerify(s.getVerify());
             historySoft.setDownloads(s.getDownloads());
             historySoft.setSoftId(s.getSoftId());
+            historySoft.setBriefIntro(s.getBriefIntro());
             historySofts.add(historySoft);
         }
         HistorySoftDto historySoftDto = new HistorySoftDto();
@@ -281,6 +282,15 @@ public class UserServiceImpl implements UserService {
             System.out.println("token信息:"+tokenInfo.getAccessToken());
             return loginSuccessDto;
         }
+    }
+
+    @Override
+    public void updatePhone(UpdatePhoneForm updatePhoneForm, String userId) {
+        if(!redisRepository.selectMessageCodeByPhone(updatePhoneForm.getNewPhone()).equals(updatePhoneForm.getCode())){
+            log.info("验证码错误！");
+            throw new SysException("验证码错误！");
+        }
+        userMapper.updatePhone(userId,updatePhoneForm.getNewPhone());
     }
 
     //修改密码或异地登录删除旧的token

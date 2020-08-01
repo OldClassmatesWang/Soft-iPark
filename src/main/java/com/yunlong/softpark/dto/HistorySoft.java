@@ -26,10 +26,6 @@ public class HistorySoft {
      */
     private String edition;
     /**
-     * 软件语言
-     */
-    private String language;
-    /**
      * 支持软件的平台
      */
     private String platform;
@@ -40,7 +36,7 @@ public class HistorySoft {
     /**
      * 更新时间
      */
-    private Date updateTime;
+    private String updateTime;
     /**
      * 审核 0未审核 1通过 2未通过
      */
@@ -49,4 +45,9 @@ public class HistorySoft {
      * 下载次数
      */
     private Integer downloads;
+
+    /**
+     * 简介
+     */
+    private String briefIntro;
 }

@@ -29,4 +29,11 @@ public class ColumnEntity {
     private String introduceId;
 
     private Integer downloads;
+
+    private String showPic;
+
+    private Integer recommend;
+
+    private Integer verify;
+
 }

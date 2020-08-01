@@ -15,9 +15,5 @@ import java.util.List;
 @Data
 public class SoftMajorDto {
 
-    List<PlatesEntity> platesEntities;
-
-    List<MajorSort> sortEntities;
-
-    List<MajorColumn> columnEntities;
+    List<MajorPlate> platesEntities;
 }
