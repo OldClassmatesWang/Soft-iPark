@@ -16,6 +16,8 @@ public class SearchSoft {
      * 软件名
      */
     private String softName;
+
+    private String softId;
     /**
      * 软件logo
      */

@@ -1,5 +1,7 @@
 package com.yunlong.softpark.util;
 
+import com.yunlong.softpark.core.exception.SysException;
+
 import java.security.MessageDigest;
 
 /**
@@ -12,23 +14,16 @@ public class Md5Util {
     private static final String hexDigIts[] = { "0", "1", "2", "3", "4", "5",
             "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" };
 
-
-
     /** MD5加密 */
     public static String MD5Encode(String origin) {
-        String charsetname = "utf-8";
         String resultString = null;
         try {
             resultString = new String(origin);
             MessageDigest md = MessageDigest.getInstance("MD5");
-            if (null == charsetname || "".equals(charsetname)) {
-                resultString = byteArrayToHexString(md.digest(resultString
-                        .getBytes()));
-            } else {
-                resultString = byteArrayToHexString(md.digest(resultString
-                        .getBytes(charsetname)));
-            }
+            resultString = byteArrayToHexString(md.digest(resultString
+                    .getBytes()));
         } catch (Exception e) {
+            throw new SysException("加密报错！");
         }
         return resultString;
     }
@@ -52,6 +47,5 @@ public class Md5Util {
     }
 
     public static void main(String[] args) {
-        System.out.println(MD5Encode("123456"));
     }
 }

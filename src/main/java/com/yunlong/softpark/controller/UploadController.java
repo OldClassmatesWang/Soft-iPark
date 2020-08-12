@@ -6,7 +6,9 @@ import com.yunlong.softpark.util.FtpFileUtils;
 import com.yunlong.softpark.util.FtpUtil;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -70,7 +72,7 @@ public class UploadController{
             UploadDto uploadDto = new UploadDto();
 
             if(result) {
-                uploadDto.setFileUrl(baseUrl+filePath+"/"+newName);
+                uploadDto.setFileUrl(baseUrl+"/images"+filePath+"/"+newName);
                 uploadDto.setMessage("上传成功！");
                 return ResultWrapper.successWithData(uploadDto);
             }else {
@@ -116,7 +118,7 @@ public class UploadController{
             boolean result = FtpUtil.uploadFile(host, port, userName, passWord, b, filePath, newName, input);
 
             if(result) {
-                uploadDto.setFileUrl(baseUrl+filePath+"/"+newName);
+                uploadDto.setFileUrl(baseUrl+"/softs"+filePath+"/"+newName);
                 uploadDto.setMessage("上传成功！");
                 return ResultWrapper.successWithData(uploadDto);
             }else {

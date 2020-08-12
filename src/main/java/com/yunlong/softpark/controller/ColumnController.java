@@ -45,7 +45,6 @@ public class ColumnController extends BaseController<UserInfo> {
      */
     @RequestMapping(path = "/rank",method = RequestMethod.GET)
     public ResultWrapper getRankData(){
-        System.out.println("接到前端请求！");
         List<RankDto> list= columnService.getRankData();
         return ResultWrapper.successWithData(list);
     }

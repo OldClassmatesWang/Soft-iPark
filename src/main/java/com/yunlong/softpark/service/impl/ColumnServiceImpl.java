@@ -46,7 +46,6 @@ public class ColumnServiceImpl implements ColumnService {
                 rankDtos.add(list.get(i));
             }
         }else {
-            System.out.println("COLUMN栏目数据不足");
             for(int i = 0 ; i < list.size() ; i ++){
                 rankDtos.add(list.get(i));
             }

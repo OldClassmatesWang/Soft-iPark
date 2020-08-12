@@ -2,14 +2,17 @@ package com.yunlong.softpark.controller;
 
 import  com.yunlong.softpark.core.support.web.controller.BaseController;
 import com.yunlong.softpark.core.wrapper.ResultWrapper;
-import com.yunlong.softpark.dto.TokenInfo;
-import com.yunlong.softpark.dto.UserInfo;
+import com.yunlong.softpark.dto.*;
+import com.yunlong.softpark.form.ColumnSimpForm;
 import com.yunlong.softpark.form.PublishedForm;
+import com.yunlong.softpark.form.SoftwareSimpForm;
 import com.yunlong.softpark.service.SoftwareService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @Author: Cui
@@ -29,8 +32,8 @@ public class SoftwareController extends BaseController<UserInfo> {
      * 分类软件主体
      * @return
      */
-    @GetMapping("/sort/{plateId}/{page}")
-    public ResultWrapper getMajorSoft(@PathVariable("page") Integer page,@PathVariable("plateId")Integer plateId){
+    @GetMapping("/sort")
+    public ResultWrapper getMajorSoft(@RequestParam("page") Integer page,@RequestParam("plateId")Integer plateId){
         return ResultWrapper.successWithData(softwareService.getMajorSoft(page,plateId));
     }
 
@@ -80,9 +83,9 @@ public class SoftwareController extends BaseController<UserInfo> {
      * @param page
      * @return
      */
-    @GetMapping("/search/{sortId}/{page}")
-    public ResultWrapper getColumnBySort(@PathVariable("sortId") Integer sortId,
-                                             @PathVariable("page") Integer page){
+    @GetMapping("/searchColumn")
+    public ResultWrapper getColumnBySort(@RequestParam("sortId") Integer sortId,
+                                             @RequestParam("page") Integer page){
         return ResultWrapper.successWithData(softwareService.getColumnBySort(sortId,page));
     }
 
@@ -91,8 +94,8 @@ public class SoftwareController extends BaseController<UserInfo> {
      * @param softId
      * @return
      */
-    @GetMapping("/download/{softId}")
-    public ResultWrapper downloadSoft(@PathVariable("softId")String softId){
+    @GetMapping("/download")
+    public ResultWrapper downloadSoft(@RequestParam("softId")String softId){
         softwareService.download(softId);
         return ResultWrapper.success();
     }
@@ -106,4 +109,47 @@ public class SoftwareController extends BaseController<UserInfo> {
         return ResultWrapper.successWithData(softwareService.publishMenu());
     }
 
+    /**
+     * 根据前端传入的columnId获取在栏目栏展示的软件相关信息
+     *
+     * @param columnSimpForm
+     * @return
+     */
+    @RequestMapping(path = "/versionShow", method = RequestMethod.POST)
+    ResultWrapper getSimpVersionIntroduce(@RequestBody ColumnSimpForm columnSimpForm) {
+        List<SoftwareSimpVersionDto> list = softwareService.getSimpVersionIntroduce(columnSimpForm.getColumnId());
+        return ResultWrapper.successWithData(list);
+    }
+
+    /**
+     * 根据前端传入的softId获取在软件点开栏上方的简单信息
+     *
+     * @param softwareSimpForm
+     * @return
+     */
+    @RequestMapping(path = "/simpInto", method = RequestMethod.POST)
+    ResultWrapper getSimpIntroduce(@RequestBody SoftwareSimpForm softwareSimpForm) {
+        SoftwareSimpIntroDto simpIntroduc = softwareService.getSimpIntroduc(softwareSimpForm.getSoftId(), softwareSimpForm
+                .getColumnId());
+
+
+        return ResultWrapper.successWithData(simpIntroduc);
+    }
+
+    /**
+     * 根据前端传入的softid获取软件点开栏的安装步骤右
+     * @param softwareSimpForm
+     * @return
+     */
+    @RequestMapping(path = "/detailIntro",method = RequestMethod.POST)
+    ResultWrapper getDetailIntroduce(@RequestBody SoftwareSimpForm softwareSimpForm) {
+        SoftwareDetailDto softwareDetailDto = softwareService.getDetailIntroduce(softwareSimpForm.getSoftId());
+        return ResultWrapper.successWithData(softwareDetailDto);
+    }
+
+    @RequestMapping(path = "/basedata",method = RequestMethod.POST)
+    ResultWrapper getBaseData(@RequestBody SoftwareSimpForm softwareSimpForm){
+        SoftwareBaseDataDto softwareBaseDataDto = softwareService.getBaseData(softwareSimpForm.getColumnId(),softwareSimpForm.getSoftId());
+        return ResultWrapper.successWithData(softwareBaseDataDto);
+    }
 }
