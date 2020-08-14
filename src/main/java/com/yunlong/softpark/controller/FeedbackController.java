@@ -42,16 +42,18 @@ public class FeedbackController extends BaseController<UserInfo> {
     @RequestMapping(path = "/insert",method = RequestMethod.POST)
     ResultWrapper insetFeedbackData(@RequestBody FeedbackForm feedbackForm, @RequestHeader("ANSWER_ACCESS_TOKEN") String token){
 
+        if (feedbackForm.getSoftId().equals(" ")||feedbackForm.getSoftId().equals("")||feedbackForm.getSoftId()==null){
+            return ResultWrapper.failure("失败！未传递softId");
+        }else {
+            if (feedbackForm.getContent().equals(" ")||feedbackForm.getContent().equals("")||feedbackForm.getContent()==null){
+                return ResultWrapper.failure("失败！反馈内容为空！");
+            }else {
+                feedbackService.insertFeedbackData(feedbackForm,token);
+                return  ResultWrapper.success();
+            }
 
-//        TokenInfo tokenInfo = new TokenInfo();
-//        tokenInfo.setAccessToken("98765");
-//        tokenInfo.setUserId("1");
-//        redisRepository.saveAccessToken(tokenInfo);
-//        redisRepository.saveLoginAccessToken(tokenInfo);
+        }
 
-        feedbackService.insertFeedbackData(feedbackForm,token);
-
-        return  ResultWrapper.success();
     }
 
     /**
@@ -78,12 +80,13 @@ public class FeedbackController extends BaseController<UserInfo> {
      */
     @RequestMapping( path = "/insertForWeb" , method = RequestMethod.POST)
     ResultWrapper insertFeedForWeb(@RequestBody FeedBackDataForm feedBackDataForm){
-
-        if(feedBackDataForm == null){
-            return ResultWrapper.failure("失败！反馈无内容");
+        
+        if(feedBackDataForm.getContent()==null||feedBackDataForm.getContent().equals(" ")||feedBackDataForm.getContent().equals("")){
+            return ResultWrapper.failure("失败！反馈内容为空");
         }else {
             feedbackService.insertFeedForWeb(feedBackDataForm.getContent());
+            return ResultWrapper.success();
         }
-        return ResultWrapper.success();
+
     }
 }

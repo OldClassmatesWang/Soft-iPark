@@ -70,7 +70,12 @@ public class ColumnController extends BaseController<UserInfo> {
      */
     @RequestMapping(path = "/detailIntro" , method = RequestMethod.POST)
     public ResultWrapper getDetailIntroduce(@RequestBody ColumnSimpForm columnSimpForm){
-        ColumnDetailDto columnDetailDto = columnService.getDetailIntroduce(columnSimpForm.getColumnId());
-        return ResultWrapper.successWithData(columnDetailDto);
+        if (columnSimpForm.getColumnId().equals("")|| columnSimpForm.getColumnId() == null||columnSimpForm.getColumnId().equals(" ")) {
+            return ResultWrapper.failure("失败！没有传递columnId");
+        }else {
+            ColumnDetailDto columnDetailDto = columnService.getDetailIntroduce(columnSimpForm.getColumnId());
+            return ResultWrapper.successWithData(columnDetailDto);
+        }
+
     }
 }

@@ -104,8 +104,7 @@ public class FeedbackServiceImpl implements FeedbackService {
      * @param
      */
     @Override
-    public void insertFeedForWeb(String content) {
-
+    public void insertFeedForWeb(String content ){
         Date time = new Date();
         int verify = 1;
         feedMapper.insertFeed(content,time,verify);

@@ -43,9 +43,13 @@ public class CommentController extends BaseController<UserInfo> {
     @RequestMapping(path = "/check",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResultWrapper getCommentData(@RequestBody CommentGetForm commentGetForm) throws ParseException {
+        if (commentGetForm.getColumnId().equals("")||commentGetForm.getColumnId()==null||commentGetForm.equals(" ")){
+            return ResultWrapper.failure("失败，未传递columnId");
+        }else {
+            List<CommentCheckDto> list = commentService.getCommentData(commentGetForm.getColumnId());
+            return ResultWrapper.successWithData(list);
+        }
 
-        List<CommentCheckDto> list = commentService.getCommentData(commentGetForm.getColumnId());
-        return ResultWrapper.successWithData(list);
     }
 
     /**
@@ -60,12 +64,15 @@ public class CommentController extends BaseController<UserInfo> {
     @RequestMapping(path = "/insert",method = RequestMethod.POST)
     public ResultWrapper insertCommentData(@RequestBody CommentForm commentForm, @RequestHeader("ANSWER_ACCESS_TOKEN")String token) {
 
-        System.out.println(commentForm);
-        if (commentForm.getColumnId()!=null&&commentForm.getContent()!=null){
-            commentService.insertCommentData(commentForm,token);
-            return ResultWrapper.success();
+        if (commentForm.getColumnId()!=null){
+            if (commentForm.getContent()==null||commentForm.getContent().equals("")||commentForm.getContent().equals(" ")){
+               return ResultWrapper.success("失败！评论值为空！");
+            }else {
+                commentService.insertCommentData(commentForm,token);
+                return ResultWrapper.success();
+            }
         }else {
-            return ResultWrapper.failure();
+            return ResultWrapper.failure("失败！为传递columnId为空！");
         }
     }
 

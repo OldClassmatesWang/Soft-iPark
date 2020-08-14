@@ -13,5 +13,4 @@ public class CommentForm {
 
     private String content;
 
-    private String token;
 }

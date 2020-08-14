@@ -15,6 +15,7 @@ import lombok.Data;
 public class SoftwareSimpVersionDto {
 
     /**
+     * 软件Id
      * 软件名
      * 软件logo
      * 版本号
@@ -26,6 +27,11 @@ public class SoftwareSimpVersionDto {
      * 简短介绍
      */
 
+
+    /**
+     * softId
+     */
+    private String softId;
     /**
      * 软件名
      */

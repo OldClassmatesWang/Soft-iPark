@@ -117,8 +117,13 @@ public class SoftwareController extends BaseController<UserInfo> {
      */
     @RequestMapping(path = "/versionShow", method = RequestMethod.POST)
     ResultWrapper getSimpVersionIntroduce(@RequestBody ColumnSimpForm columnSimpForm) {
-        List<SoftwareSimpVersionDto> list = softwareService.getSimpVersionIntroduce(columnSimpForm.getColumnId());
-        return ResultWrapper.successWithData(list);
+        if (columnSimpForm.getColumnId()==null||columnSimpForm.getColumnId().equals("")){
+            return ResultWrapper.failure("未传递columnId");
+        }else {
+            List<SoftwareSimpVersionDto> list = softwareService.getSimpVersionIntroduce(columnSimpForm.getColumnId());
+            return ResultWrapper.successWithData(list);
+        }
+
     }
 
     /**
@@ -129,11 +134,14 @@ public class SoftwareController extends BaseController<UserInfo> {
      */
     @RequestMapping(path = "/simpInto", method = RequestMethod.POST)
     ResultWrapper getSimpIntroduce(@RequestBody SoftwareSimpForm softwareSimpForm) {
-        SoftwareSimpIntroDto simpIntroduc = softwareService.getSimpIntroduc(softwareSimpForm.getSoftId(), softwareSimpForm
-                .getColumnId());
-
-
-        return ResultWrapper.successWithData(simpIntroduc);
+        if (softwareSimpForm.getSoftId().equals(" ")||softwareSimpForm.getSoftId().equals("")||softwareSimpForm.getSoftId()==null){
+            return ResultWrapper.failure("失败！未传递softId");
+        }else {
+            //传递了softId
+            SoftwareSimpIntroDto simpIntroduc =
+                    softwareService.getSimpIntroduc(softwareSimpForm.getSoftId());
+            return ResultWrapper.successWithData(simpIntroduc);
+        }
     }
 
     /**
@@ -143,13 +151,28 @@ public class SoftwareController extends BaseController<UserInfo> {
      */
     @RequestMapping(path = "/detailIntro",method = RequestMethod.POST)
     ResultWrapper getDetailIntroduce(@RequestBody SoftwareSimpForm softwareSimpForm) {
-        SoftwareDetailDto softwareDetailDto = softwareService.getDetailIntroduce(softwareSimpForm.getSoftId());
-        return ResultWrapper.successWithData(softwareDetailDto);
+        if (softwareSimpForm.getSoftId().equals(" ")||softwareSimpForm.getSoftId().equals("")||softwareSimpForm.getSoftId()==null){
+            return ResultWrapper.failure("失败！未传递softId");
+        }else {
+            SoftwareDetailDto softwareDetailDto = softwareService.getDetailIntroduce(softwareSimpForm.getSoftId());
+            return ResultWrapper.successWithData(softwareDetailDto);
+        }
+
     }
 
+    /**
+     * 根据前端传入的softId返回软件点开栏下方的基本信息
+     * @param softwareSimpForm
+     * @return
+     */
     @RequestMapping(path = "/basedata",method = RequestMethod.POST)
     ResultWrapper getBaseData(@RequestBody SoftwareSimpForm softwareSimpForm){
-        SoftwareBaseDataDto softwareBaseDataDto = softwareService.getBaseData(softwareSimpForm.getColumnId(),softwareSimpForm.getSoftId());
-        return ResultWrapper.successWithData(softwareBaseDataDto);
+        if (softwareSimpForm.getSoftId().equals(" ")||softwareSimpForm.getSoftId().equals("")||softwareSimpForm.getSoftId()==null){
+            return ResultWrapper.failure("失败！未传递softId");
+        }else {
+            SoftwareBaseDataDto softwareBaseDataDto = softwareService.getBaseData(softwareSimpForm.getSoftId());
+            return ResultWrapper.successWithData(softwareBaseDataDto);
+        }
+
     }
 }

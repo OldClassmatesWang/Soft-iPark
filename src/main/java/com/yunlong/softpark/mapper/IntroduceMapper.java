@@ -33,7 +33,7 @@ public interface IntroduceMapper {
      * @param introduceId
      * @return
      */
-    @Select("select \"BRIEF_INTRO\",\"FUNCTION\",\"CHARACTER\",\"INSTALL_ADDR\"\n" +
+    @Select("select \"BRIEF_INTRO\",\"FUNCTION\",\"CHARACTER\",\"INSTALL_ADDR\",\"UPDATE_LOG\"\n" +
             "from \"softpark\".\"INTRODUCE\" where \"INTRODUCE_ID\" = #{introduceId};")
     ColumnDetailDto selectDataForDetailColumn(String introduceId);
 }

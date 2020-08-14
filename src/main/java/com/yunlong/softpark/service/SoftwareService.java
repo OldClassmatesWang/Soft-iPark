@@ -34,10 +34,10 @@ public interface SoftwareService {
 
     /**
      * 返回在软件点开栏上栏显示的软件简介信息
-     * @param softId
+     * @param softId,columnId
      * @return
      */
-    SoftwareSimpIntroDto getSimpIntroduc(String softId,String columnId);
+    SoftwareSimpIntroDto getSimpIntroduc(String softId);
 
     /**
      * 根据软件id返回软件的右安装步骤
@@ -49,9 +49,8 @@ public interface SoftwareService {
     /**
      * 根据前端传递的columnId和softId返回软件的信息
      * 点开栏下的基本信息
-     * @param columnId
      * @param softId
      * @return
      */
-    SoftwareBaseDataDto getBaseData(String columnId, String softId);
+    SoftwareBaseDataDto getBaseData(String softId);
 }

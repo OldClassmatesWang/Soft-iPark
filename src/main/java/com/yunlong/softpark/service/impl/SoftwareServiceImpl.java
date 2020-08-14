@@ -42,6 +42,7 @@ public class SoftwareServiceImpl implements SoftwareService {
      * 获取首页软件
      * @return
      */
+    @Override
     public FirstMajorDto getFirstMajor(){
         //添加综合推荐到列表
         FirstMajor firstMajor = new FirstMajor();
@@ -147,7 +148,8 @@ public class SoftwareServiceImpl implements SoftwareService {
      * @param sortId
      * @return
      */
-    public SearchColumnDto getColumnBySort(Integer sortId,Integer page){
+    @Override
+    public SearchColumnDto getColumnBySort(Integer sortId, Integer page){
         List<ColumnEntity> columnEntities = softwareMapper.getColumnEntity(sortId,(page-1)*25);
         List<MajorColumn> searchColumns = new ArrayList<>();
         for(ColumnEntity c : columnEntities){
@@ -348,6 +350,7 @@ public class SoftwareServiceImpl implements SoftwareService {
         for (SoftwareEntity softwareEntity : list) {
             if (softwareEntity.getVerify() == 1) {
                 SoftwareSimpVersionDto ssvd = new SoftwareSimpVersionDto();
+                ssvd.setSoftId(softwareEntity.getSoftId());
                 ssvd.setSoftName(softwareEntity.getSoftName());
                 ssvd.setSoftLogo(softwareEntity.getSoftLogo());
                 ssvd.setDownloads(softwareEntity.getDownloads());
@@ -375,11 +378,10 @@ public class SoftwareServiceImpl implements SoftwareService {
      * @return
      */
     @Override
-    public SoftwareSimpIntroDto getSimpIntroduc(String softId, String columnId) {
+    public SoftwareSimpIntroDto getSimpIntroduc(String softId) {
         SoftwareEntity softwareEntity = softwareMapper.selectBySoftId(softId);
-
+        String columnId = softwareEntity.getParentId();
         ColumnSimDto simDto = columnMapper.selectDataForSimpleColumn(columnId);
-
         SoftwareSimpIntroDto simpIntroDto = new SoftwareSimpIntroDto();
 
         simpIntroDto.setSoftName(softwareEntity.getSoftName());
@@ -413,16 +415,16 @@ public class SoftwareServiceImpl implements SoftwareService {
      * 根据前端传递的columnId和softId返回软件的信息
      * 点开栏下的基本信息
      *
-     * @param columnId
      * @param softId
      * @return
      */
     @Override
-    public SoftwareBaseDataDto getBaseData(String columnId, String softId) {
+    public SoftwareBaseDataDto getBaseData( String softId) {
         SoftwareBaseDataDto softwareBaseDataDto = new SoftwareBaseDataDto();
 
-        String columnWeb = columnMapper.selectDataForBaseData(columnId);
+
         SoftwareEntity softwareEntity = softwareMapper.selectBySoftId(softId);
+        String columnWeb = columnMapper.selectDataForBaseData(softwareEntity.getParentId());
         UserEntity userEntity = userMapper.selectById(softwareEntity.getUserId());
 
         softwareBaseDataDto.setColumnWeb(columnWeb);

@@ -8,7 +8,7 @@ spring:
 #    url: jdbc:dm://10.150.3.46:5236/SoftPark
     url: jdbc:dm://127.0.0.1:5236/softpark
     username: SYSDBA
-    password: dameng666
+    password: asdfgh123456
     type: com.zaxxer.hikari.HikariDataSource
   redis:
     host: 39.97.250.88

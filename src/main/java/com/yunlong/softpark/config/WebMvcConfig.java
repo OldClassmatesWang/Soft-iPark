@@ -46,7 +46,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/software/search/**",
                         "/user/forgetPassword",
                         "/software/**",
-                        "/upload/**"
+                        "/upload/**",
+                        "/column/rank",
+                        "/column/detailIntro",
+                        "/comment/check",
+                        "/feedback/insert",
+                        "/feedback/insertForWeb"
                 );
     }
 

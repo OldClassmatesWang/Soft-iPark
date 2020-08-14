@@ -14,9 +14,4 @@ public class SoftwareSimpForm {
      * 软件id
      */
     private String softId;
-
-    /**
-     * 栏目id
-     */
-    private String columnId;
 }

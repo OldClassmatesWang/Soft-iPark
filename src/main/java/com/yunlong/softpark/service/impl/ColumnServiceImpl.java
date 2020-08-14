@@ -75,6 +75,11 @@ public class ColumnServiceImpl implements ColumnService {
     public ColumnDetailDto getDetailIntroduce(String columnId) {
         String introduceId = columnMapper.selectIntroducIdBycolumnId(columnId);
         ColumnDetailDto columnDetailDto = introduceMapper.selectDataForDetailColumn(introduceId);
+        String updateLog = columnDetailDto.getUpdateLog();
+        char[] chars = updateLog.toCharArray();
+        if (chars[0]==' '){
+            columnDetailDto.setUpdateLog("未更新");
+        }
         return columnDetailDto;
     }
     /**

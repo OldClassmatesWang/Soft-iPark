@@ -28,4 +28,9 @@ public class ColumnDetailDto {
      * 下载地址
      */
     private String installAddr;
+
+    /**
+     * 更新日志
+     */
+    private String updateLog;
 }
